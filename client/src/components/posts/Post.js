@@ -20,7 +20,7 @@ import {
   Box,
   Spinner
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { AdvancedImage } from '@cloudinary/react';
 import { fill } from '@cloudinary/base/actions/resize';
 import { max } from '@cloudinary/base/actions/roundCorners';
@@ -47,6 +47,20 @@ const Post = ({
   const [formData, setFormData] = useState({ text: '' });
   const avatar = cld.image(post.user.photo);
   avatar.resize(fill().width(40).height(40)).roundCorners(max());
+
+  const handleComment = () => {
+    if (!isAuthenticated) {
+      <Redirect to ="/login"/>
+    }
+    onOpen()
+  }
+
+  const handleLike = () => {
+    if (!isAuthenticated) {
+      <Redirect to ="/login"/>
+    }
+    likePost(post._id)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -126,7 +140,7 @@ const Post = ({
             variant="ghost"
             colorScheme="teal"
             leftIcon={<GoComment style={{ marginTop: '0.5em' }} />}
-            onClick={onOpen}
+            onClick={handleComment}
           >
             comment
           </Button>
@@ -142,7 +156,7 @@ const Post = ({
             variant="ghost"
             colorScheme="teal"
             outline="none"
-            onClick={() => likePost(post._id)}
+            onClick={handleLike}
           >
             like
           </Button>
