@@ -19,8 +19,8 @@ const Login = ({ login, alerts }) => {
   const history = useHistory();
   const toast = useToast();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'elia@gmail.com',
+    password: '123456',
   });
   const { email, password } = formData;
 
