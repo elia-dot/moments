@@ -83,7 +83,7 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
   return (
     <Flex paddingBottom="1" paddingTop="5" borderBottom="1px solid teal">
       <Box fontSize="2xl" fontWeight="black">
-        <Link to="/">YouVid</Link>
+        <Link to="/">Moments</Link>
       </Box>
       <Spacer />
       {!loading && <> {isAuthenticated ? authLinks : guestLinks}</>}
