@@ -71,7 +71,7 @@ const Post = ({
                 <Text ml="2" fontWeight="bold" textTransform="capitalize">
                   {post.user.name}
                 </Text>
-                {isAuthenticated &&
+                {/* {isAuthenticated &&
                   user._id !== post.user._id && post.user.following &&
                   !post.user.following.includes(user._id) && (
                     <IconButton
@@ -82,7 +82,7 @@ const Post = ({
                       rounded="full"
                       onClick={()=> handleFollow(post.user._id)}
                     />
-                  )}
+                  )} */}
               </Flex>
             </Link>
             <Link to={`/posts/${post._id}`}>
