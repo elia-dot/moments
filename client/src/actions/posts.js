@@ -12,6 +12,8 @@ import {
   UPDATE_COMMENT,
 } from './types';
 
+import {setAlert} from './alert'
+
 export const getPosts = () => async (dispatch) => {
   try {
     const res = await axios.get(`/posts/`);
@@ -54,6 +56,7 @@ export const addPost = (data) => async (dispatch) => {
       type: ADD_POST,
       payload: res.data,
     });
+    dispatch(setAlert('Post created!', 'success'))
   } catch (err) {
     dispatch({
       type: POSTS_ERROR,
@@ -69,9 +72,7 @@ export const deletePost = (id) => async (dispatch) => {
       type: DELETE_POST,
       payload: id,
     });
-    dispatch({
-      type: GET_POSTS,
-    });
+    dispatch(setAlert('Post deleted!', 'info'))
   } catch (err) {
     dispatch({
       type: POSTS_ERROR,
@@ -103,7 +104,7 @@ export const likePost = (id) => async (dispatch) => {
       payload: { id, likes: res.data },
     });
   } catch (err) {
-    console.log(err);
+    dispatch(setAlert(err.response.data.msg, 'error'))
   }
 };
 
@@ -120,7 +121,7 @@ export const commentOnPost = (id, data) => async (dispatch) => {
       payload: { id, comments: res.data },
     });
   } catch (err) {
-    console.log(err.response.data);
+    dispatch(setAlert(err.response.data.msg, 'error'))
   }
 };
 
@@ -132,7 +133,7 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
       payload: { postId, comments: res.data },
     });
   } catch (err) {
-    console.log(err.response.data);
+    dispatch(setAlert(err.response.data.msg, 'error'))
   }
 };
 
@@ -153,6 +154,6 @@ export const updateComment = (postId, commentId, data) => async (dispatch) => {
       payload: { postId, comments: res.data },
     });
   } catch (err) {
-    console.log(err.response.data);
+    dispatch(setAlert(err.response.data.msg, 'error'))
   }
 };

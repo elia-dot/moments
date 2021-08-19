@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE } from './types';
+import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, FOLLOW } from './types';
 
 export const getProfile = (id) => async (dispatch) => {
   try {
@@ -53,3 +53,19 @@ export const uploadImg = (file) => async (dispatch) => {
   }
   dispatch(updateProfile({ photo: imgUrl }));
 };
+
+
+export const follow = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/users/follow/${id}`)
+    dispatch({
+      type: FOLLOW,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response },
+    });
+  }
+}

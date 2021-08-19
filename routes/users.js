@@ -197,23 +197,18 @@ router.put('/follow/:id', auth, async (req, res) => {
     }
 
     if (
-      user.following.filter((follow) => follow.user.toString() === req.user.id)
+      user.following.filter((follow) => follow.toString() === req.user.id)
         .length > 0
     ) {
       const removeIndex = user.following
-        .map((follow) => follow.user.toString())
+        .map((follow) => follow.toString())
         .indexOf(req.user.id);
 
       user.following.splice(removeIndex, 1);
     } else if (
-      user.following.filter((follow) => follow.user === req.user.id).length ===
-      0
+      user.following.filter((follow) => follow === req.user.id).length === 0
     ) {
-      user.following.unshift({
-        user: req.user.id,
-        photo: req.user.photo,
-        name: req.user.name,
-      });
+      user.following.unshift(req.user.id);
     }
 
     await user.save();

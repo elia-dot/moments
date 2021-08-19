@@ -4,7 +4,6 @@ import { Flex } from '@chakra-ui/react';
 import Post from './Post';
 
 const Posts = ({ posts }) => {
-  
   return (
     <Flex width="100%" direction="column">
       {posts.map((post) => (

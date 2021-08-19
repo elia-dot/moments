@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Container, Divider, Flex, Spinner } from '@chakra-ui/react';
 
 import { getProfile } from '../../actions/profile';
-import {getPostByUser} from '../../actions/posts'
+import { getPostByUser } from '../../actions/posts';
 import ProfileTop from './ProfileTop';
 import Posts from '../posts/Posts';
 import AddPost from '../posts/AddPost';
@@ -15,28 +15,30 @@ const Profile = ({
   match,
   profile: { profile, loading },
   posts,
-  auth
+  auth,
 }) => {
   useEffect(() => {
-    const id = match.params.id
+    const id = match.params.id;
     getProfile(id);
-    getPostByUser(id)
+    getPostByUser(id);
     // eslint-disable-next-line
   }, [getProfile, match.params.id]);
 
   if (!profile || loading) {
     return (
-      <Flex width="100%" height = "100vh" align="center" justify="center">
-        <Spinner color="teal" size="lg" emptyColor="gray.200"/>
+      <Flex width="100%" height="100vh" align="center" justify="center">
+        <Spinner color="teal" size="lg" emptyColor="gray.200" />
       </Flex>
     );
   }
   return (
     <Container maxW="container.md">
       <ProfileTop profile={profile} />
-      <Divider borderColor = "telegram.100"/>
-      {auth.isAuthenticated && <AddPost />}
-      <Posts posts = {posts.posts}/>
+      <Divider borderColor="telegram.100" />
+      {auth.isAuthenticated && auth.user._id === profile._id && (
+        <AddPost />
+      )}
+      <Posts posts={posts.posts} />
     </Container>
   );
 };

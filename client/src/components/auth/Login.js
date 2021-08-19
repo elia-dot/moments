@@ -34,14 +34,11 @@ const Login = ({ login, alerts }) => {
     login(email, password);
   };
   useEffect(() => {
-    alerts.forEach((alert) =>
-      toast({
-        title: alert.msg,
-        status: alert.alertType,
-        isClosable: true,
-      })
-    );
-    alerts.length > 0 && alerts[0].alertType === 'success' && history.push('/');
+    alerts.length > 0 &&
+      alerts[0].alertType === 'success' &&
+      setTimeout(() => {
+        history.push('/');
+      }, 1000);
   }, [alerts, toast, history]);
 
   return (

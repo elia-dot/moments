@@ -45,6 +45,7 @@ export const signup =
         payload: res.data,
       });
       dispatch(loadUser());
+      dispatch(setAlert('Account created!', 'success'));
     } catch (err) {
       const errors = err.response.data.errors;
       if (errors) {
@@ -73,6 +74,7 @@ export const login = (email, password) => async (dispatch) => {
       payload: res.data,
     });
     dispatch(loadUser());
+    dispatch(setAlert('Logged in successfuly!', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -89,19 +91,23 @@ export const logout = () => (dispatch) => {
     type: LOGOUT,
   });
   (function () {
-    var cookies = document.cookie.split("; ");
+    var cookies = document.cookie.split('; ');
     for (let c = 0; c < cookies.length; c++) {
-        const d = window.location.hostname.split(".");
-        while (d.length > 0) {
-            const cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
-            const p = window.location.pathname.split('/');
-            document.cookie = cookieBase + '/';
-            while (p.length > 0) {
-                document.cookie = cookieBase + p.join('/');
-                p.pop();
-            };
-            d.shift();
+      const d = window.location.hostname.split('.');
+      while (d.length > 0) {
+        const cookieBase =
+          encodeURIComponent(cookies[c].split(';')[0].split('=')[0]) +
+          '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' +
+          d.join('.') +
+          ' ;path=';
+        const p = window.location.pathname.split('/');
+        document.cookie = cookieBase + '/';
+        while (p.length > 0) {
+          document.cookie = cookieBase + p.join('/');
+          p.pop();
         }
+        d.shift();
+      }
     }
-})();
+  })();
 };

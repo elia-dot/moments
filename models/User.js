@@ -18,14 +18,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'default_o5swuq_loz92g',
   },
-  following: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-      },
-    },
-  ],
+  following: {
+    type: [mongoose.Schema.Types.ObjectId],
+  },
   games: {
     type: [String],
     require: true,
@@ -35,13 +30,5 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
-// userSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'following.user',
-//     model: 'user',
-//   });
-//   next();
-// });
 
 module.exports = User = mongoose.model('user', userSchema);

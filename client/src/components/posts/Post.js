@@ -18,9 +18,8 @@ import {
   Spacer,
   IconButton,
   Box,
-  Spinner
 } from '@chakra-ui/react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AdvancedImage } from '@cloudinary/react';
 import { fill } from '@cloudinary/base/actions/resize';
 import { max } from '@cloudinary/base/actions/roundCorners';
@@ -31,9 +30,11 @@ import { GoComment } from 'react-icons/go';
 import ReactPlayer from 'react-player';
 import { useDisclosure } from '@chakra-ui/hooks';
 import { AiFillDelete } from 'react-icons/ai';
+import { RiUserFollowLine } from 'react-icons/ri';
 
 import { cld } from '../../cloudinaryConfig';
 import { likePost, commentOnPost, deletePost } from '../../actions/posts';
+import { follow } from '../../actions/profile';
 import Comment from './Comment';
 
 const Post = ({
@@ -42,38 +43,23 @@ const Post = ({
   likePost,
   commentOnPost,
   deletePost,
+  alerts,
+  follow,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState({ text: '' });
   const avatar = cld.image(post.user.photo);
   avatar.resize(fill().width(40).height(40)).roundCorners(max());
 
-  const handleComment = () => {
-    if (!isAuthenticated) {
-      <Redirect to ="/login"/>
-    }
-    onOpen()
-  }
-
-  const handleLike = () => {
-    if (!isAuthenticated) {
-      <Redirect to ="/login"/>
-    }
-    likePost(post._id)
-  }
-
+  const handleFollow = (id) => {
+    follow(id);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     commentOnPost(post._id, formData);
     onClose();
   };
-  if (!post.user) {
-    return (
-      <Flex width="100%" align="center" justify="center">
-        <Spinner color="teal" size="lg" emptyColor="gray.200" />
-      </Flex>
-    );
-  }
+
   return (
     <>
       <Flex direction="column" px="3" pt="3" my="3" boxShadow="lg" rounded="md">
@@ -85,6 +71,18 @@ const Post = ({
                 <Text ml="2" fontWeight="bold" textTransform="capitalize">
                   {post.user.name}
                 </Text>
+                {isAuthenticated &&
+                  user._id !== post.user._id && post.user.following &&
+                  !post.user.following.includes(user._id) && (
+                    <IconButton
+                      icon={<RiUserFollowLine />}
+                      colorScheme="teal"
+                      variant="ghost"
+                      ml="2"
+                      rounded="full"
+                      onClick={()=> handleFollow(post.user._id)}
+                    />
+                  )}
               </Flex>
             </Link>
             <Link to={`/posts/${post._id}`}>
@@ -140,7 +138,7 @@ const Post = ({
             variant="ghost"
             colorScheme="teal"
             leftIcon={<GoComment style={{ marginTop: '0.5em' }} />}
-            onClick={handleComment}
+            onClick={onOpen}
           >
             comment
           </Button>
@@ -156,7 +154,7 @@ const Post = ({
             variant="ghost"
             colorScheme="teal"
             outline="none"
-            onClick={handleLike}
+            onClick={() => likePost(post._id)}
           >
             like
           </Button>
@@ -201,14 +199,17 @@ Post.propTypes = {
   likePost: PropTypes.func.isRequired,
   commentOnPost: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
+  follow: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  alerts: state.alert,
 });
 
 export default connect(mapStateToProps, {
   likePost,
   commentOnPost,
   deletePost,
+  follow,
 })(Post);

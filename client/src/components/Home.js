@@ -9,7 +9,7 @@ import AddPost from './posts/AddPost';
 
 const Home = ({ getPosts, posts, auth }) => {
   useEffect(() => {
-    getPosts();
+    getPosts()
   }, [getPosts]);
   if (!posts || posts.loading) {
     <Flex width="100%" height="100vh" align="center" justify="center">

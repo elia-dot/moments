@@ -32,13 +32,15 @@ import { BiImageAlt } from 'react-icons/bi';
 import { cld } from '../../cloudinaryConfig';
 import { updateProfile } from '../../actions/profile';
 import { uploadImg } from '../../actions/profile';
+import useWidth from '../../utils/useWidth';
 
 const ProfileTop = ({
   profile: { profile },
   auth: { isAuthenticated, user: authUser },
   updateProfile,
-  uploadImg
+  uploadImg,
 }) => {
+  const { width } = useWidth();
   const hiddenFileInput = React.useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState({
@@ -96,17 +98,19 @@ const ProfileTop = ({
       <Text mb="4" fontSize="3xl" fontWeight="bold" textTransform="capitalize">
         {profile.name}
       </Text>
-      <HStack
-        divider={<StackDivider borderColor="teal.100" />}
-        spacing={3}
-        align="center"
-      >
-        {profile.games.map((game, i) => (
-          <Tag key={i} colorScheme="teal" variant="outline">
-            {game}
-          </Tag>
-        ))}
-      </HStack>
+      {width > 950 && (
+        <HStack
+          divider={<StackDivider borderColor="teal.100" />}
+          spacing={3}
+          align="center"
+        >
+          {profile.games.map((game, i) => (
+            <Tag key={i} colorScheme="teal" variant="outline">
+              {game}
+            </Tag>
+          ))}
+        </HStack>
+      )}
       {isAuthenticated && profile._id === authUser._id && (
         <Button
           variant="outline"
@@ -167,4 +171,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { updateProfile, uploadImg })(ProfileTop);
+export default connect(mapStateToProps, { updateProfile, uploadImg })(
+  ProfileTop
+);

@@ -5,6 +5,7 @@ import {
   CLEAR_PROFILE,
   LOGOUT,
   UPDATE_PROFILE,
+  FOLLOW,
 } from '../actions/types';
 
 const initialState = {
@@ -21,6 +22,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         profile: payload,
+        loading: false,
+      };
+    case FOLLOW:
+      return {
+        ...state,
+        profile: (state.profile.following = payload),
         loading: false,
       };
     case PROFILE_ERROR:
