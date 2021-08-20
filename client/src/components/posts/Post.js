@@ -61,7 +61,7 @@ const Post = ({
 
   return (
     <>
-      <Flex direction="column" px="3" pt="3" my="3" boxShadow="lg" rounded="md">
+      <Flex direction="column" px="5" pt="5" my="5" boxShadow="2xl" rounded="lg">
         <Flex>
           <Box>
             <Flex>
