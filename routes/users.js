@@ -120,7 +120,7 @@ router.get('/logout', (req, res) => {
   res.status(200).json({
     status: 'success',
   });
-})
+});
 
 // get current user
 
@@ -199,32 +199,42 @@ router.put('/update-me', auth, async (req, res) => {
 
 router.put('/follow/:id', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
+    const id = req.params.id;
+    const currentUser = await User.findById(req.user.id);
 
-    if (user.id === req.user.id) {
+    if (id === currentUser.id) {
       return res.status(400).json({ msg: 'You cant follow yourself' });
     }
 
-    if (
-      user.following.filter((follow) => follow.toString() === req.user.id)
-        .length > 0
-    ) {
-      const removeIndex = user.following
-        .map((follow) => follow.toString())
-        .indexOf(req.user.id);
-
-      user.following.splice(removeIndex, 1);
+    if (currentUser.following.filter((follow) => follow.toString() === id).length === 0) {
+      currentUser.following.push(id);
     } else if (
-      user.following.filter((follow) => follow === req.user.id).length === 0
+      currentUser.following.filter((follow) => follow.toString() === id).length > 0
     ) {
-      user.following.unshift(req.user.id);
+      const removeIndex = currentUser.following
+        .map((follow) => follow.toString())
+        .indexOf(id);
+
+      currentUser.following.splice(removeIndex, 1);
     }
 
-    await user.save();
-    res.json(user.following);
+    // if (
+    //   req.user.following.filter((follow) => follow.toString() === user.id)
+    //     .length > 0
+    // ) {
+    //   const removeIndex = user.following
+    //     .map((follow) => follow.toString())
+    //     .indexOf(req.user.id);
+
+    //   user.following.splice(removeIndex, 1);
+    // } else if (
+    //   user.following.filter((follow) => follow === req.user.id).length === 0
+    // ) {
+    //   user.following.unshift(req.user.id);
+    // }
+
+    await currentUser.save();
+    res.json(currentUser.following);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

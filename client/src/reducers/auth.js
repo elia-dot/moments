@@ -8,6 +8,7 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
+  FOLLOW,
 } from '../actions/types';
 
 const initialState = {
@@ -33,6 +34,12 @@ export default function (state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated: true,
+        loading: false,
+      };
+    case FOLLOW:
+      return {
+        ...state,
+        user: { ...state.user, following: payload },
         loading: false,
       };
     case REGISTER_FAIL:

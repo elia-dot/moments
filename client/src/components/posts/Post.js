@@ -43,7 +43,6 @@ const Post = ({
   likePost,
   commentOnPost,
   deletePost,
-  alerts,
   follow,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,15 +64,18 @@ const Post = ({
       <Flex direction="column" px="3" pt="3" my="3" boxShadow="lg" rounded="md">
         <Flex>
           <Box>
+            <Flex>
             <Link to={`/profile/${post.user._id}`}>
               <Flex align="center">
                 <AdvancedImage cldImg={avatar} />
                 <Text ml="2" fontWeight="bold" textTransform="capitalize">
                   {post.user.name}
-                </Text>
-                {/* {isAuthenticated &&
-                  user._id !== post.user._id && post.user.following &&
-                  !post.user.following.includes(user._id) && (
+                </Text>               
+              </Flex>
+            </Link>
+            {isAuthenticated &&
+                  user._id !== post.user._id && 
+                  !user.following.includes(post.user._id) && (
                     <IconButton
                       icon={<RiUserFollowLine />}
                       colorScheme="teal"
@@ -82,9 +84,8 @@ const Post = ({
                       rounded="full"
                       onClick={()=> handleFollow(post.user._id)}
                     />
-                  )} */}
-              </Flex>
-            </Link>
+                  )}
+            </Flex>
             <Link to={`/posts/${post._id}`}>
               <Text fontSize="sm" color="gray.500">
                 <Moment fromNow>{post.createdAt}</Moment>
