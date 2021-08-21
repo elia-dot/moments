@@ -18,6 +18,7 @@ import {
   Spacer,
   IconButton,
   Box,
+  Tooltip,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AdvancedImage } from '@cloudinary/react';
@@ -61,30 +62,40 @@ const Post = ({
 
   return (
     <>
-      <Flex direction="column" px="5" pt="5" my="5" boxShadow="2xl" rounded="lg">
+      <Flex
+        direction="column"
+        px="5"
+        pt="5"
+        my="5"
+        boxShadow="2xl"
+        rounded="lg"
+      >
         <Flex>
           <Box>
             <Flex>
-            <Link to={`/profile/${post.user._id}`}>
-              <Flex align="center">
-                <AdvancedImage cldImg={avatar} />
-                <Text ml="2" fontWeight="bold" textTransform="capitalize">
-                  {post.user.name}
-                </Text>               
-              </Flex>
-            </Link>
-            {isAuthenticated &&
-                  user._id !== post.user._id && 
-                  !user.following.includes(post.user._id) && (
+              <Link to={`/profile/${post.user._id}`}>
+                <Flex align="center">
+                  <AdvancedImage cldImg={avatar} />
+                  <Text ml="2" fontWeight="bold" textTransform="capitalize">
+                    {post.user.name}
+                  </Text>
+                </Flex>
+              </Link>
+
+              {isAuthenticated &&
+                user._id !== post.user._id &&
+                !user.following.includes(post.user._id) && (
+                  <Tooltip label={`Follow ${post.user.name}`} hasArrow bg="teal">
                     <IconButton
                       icon={<RiUserFollowLine />}
                       colorScheme="teal"
                       variant="ghost"
                       ml="2"
                       rounded="full"
-                      onClick={()=> handleFollow(post.user._id)}
+                      onClick={() => handleFollow(post.user._id)}
                     />
-                  )}
+                  </Tooltip>
+                )}
             </Flex>
             <Link to={`/posts/${post._id}`}>
               <Text fontSize="sm" color="gray.500">

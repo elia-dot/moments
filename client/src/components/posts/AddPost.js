@@ -66,7 +66,7 @@ const AddPost = ({ addPost }) => {
         leftIcon={<EditIcon />}
         ml="50%"
         transform="translateX(-50%)"
-        my="3"
+        mt="5"
         onClick={onOpen}
       >
         Add new post

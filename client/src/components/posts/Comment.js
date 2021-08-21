@@ -20,6 +20,7 @@ import {
   Input,
   Button,
   Spinner,
+  Tooltip,
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
@@ -32,9 +33,11 @@ import PropTypes from 'prop-types';
 import { MdModeEdit } from 'react-icons/md';
 import { AiFillDelete } from 'react-icons/ai';
 import { useDisclosure } from '@chakra-ui/hooks';
+import { RiUserFollowLine } from 'react-icons/ri';
 
 import { cld } from '../../cloudinaryConfig';
 import { deleteComment, updateComment } from '../../actions/posts';
+import { follow } from '../../actions/profile';
 
 const Comment = ({
   postId,
@@ -42,16 +45,23 @@ const Comment = ({
   auth: { isAuthenticated, user: authUser },
   deleteComment,
   updateComment,
+  follow,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState({ text: text });
   const avatar = cld.image(user.photo);
   avatar.resize(fill().width(40).height(40)).roundCorners(max());
+
+  const handleFollow = (id) => {
+    follow(id);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     updateComment(postId, commentId, formData);
     onClose();
   };
+
   if (!user) {
     return (
       <Flex width="100%" height="100vh" align="center" justify="center">
@@ -71,6 +81,20 @@ const Comment = ({
               </Text>
             </Flex>
           </Link>
+          {isAuthenticated &&
+            authUser._id !== user._id &&
+            !authUser.following.includes(user._id) && (
+              <Tooltip label={`Follow ${user.name}`} hasArrow bg="teal">
+                <IconButton
+                  icon={<RiUserFollowLine />}
+                  colorScheme="teal"
+                  variant="ghost"
+                  ml="2"
+                  rounded="full"
+                  onClick={() => handleFollow(user._id)}
+                />
+              </Tooltip>
+            )}
           {isAuthenticated && user._id === authUser._id && (
             <>
               <Spacer />{' '}
@@ -143,12 +167,15 @@ Comment.propTypes = {
   comment: PropTypes.object.isRequired,
   deleteComment: PropTypes.func.isRequired,
   updateComment: PropTypes.func.isRequired,
+  follow: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { deleteComment, updateComment })(
-  Comment
-);
+export default connect(mapStateToProps, {
+  deleteComment,
+  updateComment,
+  follow,
+})(Comment);
